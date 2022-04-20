@@ -97,9 +97,12 @@ void tree(char* path, int dashes, int spaces, int level){
 }
 
 int main(int argc, char* argv[]){
+    if (argc == 1){
+        printf("Please specify a directory.\n");
+        return 1;
+    }
     printf("%c", '\0');
     char* path = realpath(argv[1], NULL);
-    //printf("%s", path);
     printf("%s%s%s",BLUE, argv[1], DEFAULT);
     tree(path, 4, 5, 0);
     puts("\0");
