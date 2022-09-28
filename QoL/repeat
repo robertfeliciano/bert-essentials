@@ -1,0 +1,7 @@
+#!/bin/bash
+
+trap exit SIGINT
+
+for ((i=0;i<$1;i++)); do
+    eval ${*:2}
+done
