@@ -1,0 +1,20 @@
+#!/usr/bin/env python 
+
+#this should be called like: topdf src.[ext] dest.pdf
+
+from PIL import Image
+import sys
+import os
+
+if __name__ == "__main__":
+
+    if len(sys.argv) < 3:
+        print("Usage: topdf src.[jpg|png|...] dest.pdf")
+        sys.exit(1)
+
+    src = sys.argv[1]
+    dest = sys.argv[2]
+
+    original = Image.open(src)
+    original.convert('RGB').save(dest)
+    os.system(f"rm {src}")
