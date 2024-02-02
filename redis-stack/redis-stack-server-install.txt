@@ -1,0 +1,36 @@
+curl https://packages.redis.io/redis-stack/redis-stack-server-7.2.0-v8-x86_64.AppImage -o redis-stack-server
+sudo mv redis-stack-server /usr/local/bin/redis-stack-server
+sudo mkdir /var/lib/redis-stack
+sudo mv redis-stack.conf /etc/redis-stack.conf
+
+sudo cat <<EOF > /etc/systemd/system/redis-stack-server.service
+# /etc/systemd/system/redis-stack-server.service
+[Unit]
+Description=Redis stack server
+Documentation=https://redis.io
+After=network.target
+
+[Service]
+Type=simple
+User=nobody
+ExecStart=/usr/local/bin/redis-stack-server /etc/redis-stack.conf
+WorkingDirectory=/var/lib/redis-stack
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
+
+sudo systemctl daemon-reload
+
+# the restorecon command may need to be installed depending on the distro
+sudo restorecon -v /etc/systemd/system/redis-stack-server.service
+sudo chcon -t bin_t /usr/local/bin/redis-stack-server
+sudo systemctl daemon-reload
+sudo systemctl enable redis-stack-server.service
+sudo systemctl start redis-stack-server
+sudo systemctl status redis-stack-server.service
+
+# after this run redis-cli (you may need to install base redis for this)
+# and then run this command in redis-cli:
+config set stop-writes-on-bgsave-error no
